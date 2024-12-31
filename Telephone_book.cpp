@@ -1,5 +1,5 @@
- Project: chall96
- Telephone book using STL
+Project: Telephone book using STL
+
 #include <iostream>
 #include <vector>
 #include <string>
