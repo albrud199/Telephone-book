@@ -67,7 +67,7 @@ Phone Book - CRUD Menu
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/phone-book-cpp.git
+   git clone https://github.com/albrud199/Telephone-book-using-STL-CPP.git
    cd phone-book-cpp
    ```
 
