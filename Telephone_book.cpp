@@ -1,99 +1,158 @@
-// Project: Telephone book using STL
-
-// delete contact implement korte hbe... string address add korte hbe ... then instagram err library management system implemnt korte hbe...
-
-// link -> https://www.instagram.com/p/C4GPBGvPxkP/?img_index=4
-
-#include <iostream>
-#include <vector>
-#include <string>
+#include <bits/stdc++.h>
 using namespace std;
 
 struct Person {
     string name;
     int phoneNum;
-    Person(string s = "", int num = 0) {
-        name = s;
-        phoneNum = num;
-    }
+    Person(string s = "", int num = 0) : name(s), phoneNum(num) {}
 };
 
-void displayData(vector<Person> &);
-void search(vector<Person> &, string);
-void search(vector<Person> &, int);
+void createContact(vector<Person>& contacts);
+void readContacts(const vector<Person>& contacts);
+void updateContact(vector<Person>& contacts);
+void deleteContact(vector<Person>& contacts);
+void searchContact(const vector<Person>&);
+
 
 int main() {
-    vector<Person> p;
+    vector<Person> contacts;
+    int choice;
 
-    int ch;
-    string str;
-    int num;
-    p.push_back(Person("Nimish", 2534123));
-    p.push_back(Person("Anmol", 982301));
-    p.push_back(Person("Shubham", 789635));
+    while (true) {
+        
+        cout << "\nPhone Book - CRUD Menu\n";
+        cout << "1. Create (Add Contact)\n";
+        cout << "2. Read (View Contacts)\n";
+        cout << "3. Update (Edit Contact)\n";
+        cout << "4. Delete (Remove Contact)\n";
+        cout << "5. Search Contact\n";
+        cout << "0. Exit\n";
+        cout << "Enter choice: ";
 
-    while (1) {
-        cout << "1. View Phone Book" << endl;
-        cout << "2. Search by name" << endl;
-        cout << "3. Search by number" << endl;
-        cout << "0. Exit" << endl;
-        cout << "Enter your choice: " << endl;
-        cin >> ch;
-        switch (ch) {
-            case 1:
-                displayData(p);
-                break;
-            case 2:
-                cout << "Enter name: " << endl;
-                cin >> str;
-                search(p, str);
-                break;
-            case 3:
-                cout << "Enter phone number: " << endl;
-                cin >> num;
-                search(p, num);
-                break;
-            case 0:
-                exit(1);
-            default:
-                cout << "Invalid choice" << endl;
+        
+        while (!(cin >> choice) || choice < 0 || choice > 5) {
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            cout << "Invalid input. Please enter a number between 0 and 5: ";
+        }
+
+        switch (choice) {
+            case 1: createContact(contacts); break;
+            case 2: readContacts(contacts); break;
+            case 3: updateContact(contacts); break;
+            case 4: deleteContact(contacts); break;
+            case 5: searchContact(contacts); break;
+            case 0: return 0;
         }
     }
-    return 0;
 }
 
-void displayData(vector<Person> &p) {
-    if (p.size() == 0) {
-        cout << "No data in the phone book" << endl;
+void createContact(vector<Person>& contacts) {
+    string name;
+    int phone;
+
+    cout << "Enter name: ";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    getline(cin, name);
+
+    cout << "Enter phone number: ";
+    cin >> phone;
+
+    contacts.push_back(Person(name, phone));
+    cout << "Contact added.\n";
+}
+
+void readContacts(const vector<Person>& contacts) {
+    if (contacts.empty()) {
+        cout << "No contacts available.\n";
         return;
     }
-    for (int i = 0; i < p.size(); i++)
-        cout << p[i].name << " " << p[i].phoneNum << endl;
-    cout << endl;
+    cout << "Contacts List:\n";
+    for (const auto& p : contacts) {
+        cout << p.name << " - " << p.phoneNum << endl;
+    }
 }
 
-void search(vector<Person> &p, string str) {
-    bool found = false;
-    cout << "Search Results:" << endl;
-    for (int i = 0; i < p.size(); i++) {
-        if (str == p[i].name) {
-            found = true;
-            cout << p[i].name << " " << p[i].phoneNum << endl << endl;
+void updateContact(vector<Person>& contacts) {
+    string name;
+    cout << "Enter the name of the contact to update: ";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    getline(cin, name);
+    for (auto& p : contacts) {
+        if (p.name == name) {
+            string newName;
+            int newPhone;
+
+            cout << "Enter new name: ";
+            getline(cin, newName);
+
+            cout << "Enter new phone number: ";
+            cin >> newPhone;
+
+            p.name = newName;
+            p.phoneNum = newPhone;
+
+            cout << "Contact updated.\n";
+            return;
         }
     }
-    if (found == false)
-        cout << "No matching entry" << endl << endl;
+    cout << "Contact not found.\n";
 }
 
-void search(vector<Person> &p, int num) {
-    bool found = false;
-    cout << "Search Results:" << endl;
-    for (int i = 0; i < p.size(); i++) {
-        if (num == p[i].phoneNum) {
-            found = true;
-            cout << p[i].name << " " << p[i].phoneNum << endl << endl;
+void deleteContact(vector<Person>& contacts) {
+    int phoneNum;
+    cout << "Enter the phoneNum of the contact to delete: ";
+    cin >> phoneNum;
+    for (auto it = contacts.begin(); it != contacts.end(); ++it) {
+        if (it->phoneNum == phoneNum) {
+            contacts.erase(it);
+            cout << "Contact deleted.\n";
+            return;
         }
     }
-    if (found == false)
-        cout << "No matching entry" << endl << endl;
+    cout << "Contact not found.\n";
+}
+
+void searchContact(const vector<Person>& contacts) {
+    if (contacts.empty()) {
+        cout << "Phone book is empty.\n";
+        return;
+    }
+
+    int choice;
+    cout << "Search by:\n1. Name\n2. Phone Number\nEnter choice: ";
+    cin >> choice;
+
+    if (choice == 1) {
+        string name;
+        cout << "Enter name to search: ";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        getline(cin, name);
+        bool found = false;
+        for (const auto& p : contacts) {
+            if (p.name == name) {
+                cout << "Found: " << p.name << " - " << p.phoneNum << endl;
+                found = true;
+            }
+        }
+        if (!found)
+            cout << "No contact found with name '" << name << "'.\n";
+    }
+    else if (choice == 2) {
+        int phone;
+        cout << "Enter phone number to search: ";
+        cin >> phone;
+        bool found = false;
+        for (const auto& p : contacts) {
+            if (p.phoneNum == phone) {
+                cout << "Found: " << p.name << " - " << p.phoneNum << endl;
+                found = true;
+            }
+        }
+        if (!found)
+            cout << "No contact found with phone number '" << phone << "'.\n";
+    }
+    else {
+        cout << "Invalid search choice.\n";
+    }
 }
